@@ -1,4 +1,4 @@
-(() => {
+frappe.ready(() => {
   function ensureParticlesHost() {
     if (document.getElementById("particles-js")) {
       return;
@@ -11,7 +11,7 @@
     document.body.prepend(host);
   }
 	function isSignupLink(target) {
-		if (!target || target.tagName !== "A") {
+		if (!target) {
 			return false;
 		}
 		const href = target.getAttribute("href") || "";
@@ -29,4 +29,4 @@
 
   ensureParticlesHost();
   document.addEventListener("click", onClick);
-})();
+});
