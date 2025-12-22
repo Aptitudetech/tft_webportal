@@ -227,6 +227,119 @@ body,
 	font-size: 14px;
 }
 
+/* Global web form theme (match registration) */
+.web-form-container {
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 0 24px 40px;
+}
+
+.web-form {
+	background: var(--surface);
+	border: 1px solid var(--line);
+	border-radius: var(--border-radius-sm);
+	box-shadow: var(--shadow);
+	padding: 24px;
+}
+
+.web-form-body,
+.web-form-wrapper {
+	background: transparent;
+}
+
+.web-form .form-section {
+	border: 1px solid var(--line);
+	border-radius: var(--border-radius-sm);
+	padding: 16px;
+	margin-bottom: 16px;
+	background: var(--surface);
+}
+
+.web-form .form-section .section-head {
+	font-size: 13px;
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	color: var(--accent-2);
+	margin-bottom: 12px;
+}
+
+.web-form .form-group,
+.web-form .frappe-control {
+	margin-bottom: 12px;
+}
+
+.web-form label,
+.web-form .control-label,
+.web-form .form-group > label,
+.web-form .control-input .control-label {
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: var(--muted);
+}
+
+.web-form .form-control,
+.web-form .input-with-feedback,
+.web-form .input-with-feedback.form-control,
+.web-form .input-with-feedback.form-control.bold,
+.web-form input,
+.web-form select,
+.web-form textarea {
+	border: 1px solid var(--line);
+	background: var(--surface);
+	border-radius: var(--border-radius-sm);
+	padding: 12px 14px;
+	font-size: 14px;
+	color: var(--ink);
+	transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.web-form .form-control:focus,
+.web-form .input-with-feedback:focus,
+.web-form input:focus,
+.web-form select:focus,
+.web-form textarea:focus {
+	outline: none;
+	border-color: var(--accent);
+	box-shadow: 0 0 0 3px rgba(24, 90, 42, 0.18);
+}
+
+.web-form .form-control.bold,
+.web-form .input-with-feedback.form-control.bold {
+	font-weight: 500;
+	border: 1px solid var(--line) !important;
+	background: var(--surface) !important;
+	border-radius: var(--border-radius-sm) !important;
+	box-shadow: none !important;
+}
+
+.web-form .help-box {
+	font-size: 12px;
+	color: var(--muted);
+}
+
+.control-value {
+	border: 1px solid var(--line);
+	background: var(--surface);
+	border-radius: 12px;
+	padding: 12px 14px;
+	font-size: 14px;
+	transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+input.input-with-feedback.form-control {
+	background: var(--surface);
+	padding: 20px 14px !important;
+	transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sidebar-column.col-sm-2{
+	padding: 15px 20px;
+	position: sticky;
+	margin-top: 20px;
+	align-self: start;
+}
+
 .tft-register .aside {
 	display: grid;
 	gap: 16px;
