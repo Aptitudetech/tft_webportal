@@ -98,12 +98,19 @@
 							<input id="vehicle_qty" name="vehicle_qty" type="number" min="1" placeholder="{{ _('1') }}" required />
 						</div>
 					</div>
-					<div class="field inline-field">
-						<label for="multi_address">{{ _("Multiple pickup/dropoff locations") }}</label>
-						<div class="checkbox-wrap">
+				</div>
+			</div>
+
+			<div class="section-card">
+				<div class="section-head">{{ _("Address Mode") }}</div>
+				<div class="field inline-field">
+					<!-- <label for="multi_address">{{ _("Multiple pickup/dropoff locations") }}</label> -->
+					<div class="checkbox-wrap">
+						<label class="switch">
 							<input id="multi_address" name="multi_address" type="checkbox" />
-							<span>{{ _("Add more than one From/To address") }}</span>
-						</div>
+							<span class="slider" aria-hidden="true"></span>
+						</label>
+						<span>{{ _("Multiple pickup/dropoff locations") }} <br> {{ _("Add more than one From/To address") }}</span>
 					</div>
 				</div>
 			</div>
