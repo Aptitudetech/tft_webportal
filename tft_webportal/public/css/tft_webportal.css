@@ -569,6 +569,123 @@ body,
 	background: #fee2e2;
 }
 
+#page-me .my-account-container {
+	max-width: 980px;
+	margin: 24px auto 64px;
+	padding: 0 24px;
+}
+
+#page-me .my-account-header {
+	font-size: clamp(28px, 3vw, 36px);
+	margin: 0 0 20px;
+	color: var(--ink);
+}
+
+#page-me .account-info {
+	background: var(--surface);
+	border: 1px solid var(--line);
+	border-radius: 18px;
+	box-shadow: var(--shadow);
+	padding: 12px;
+	gap: 8px;
+}
+
+#page-me .account-info > .col {
+	background: var(--surface-2);
+	border-radius: 14px;
+	padding: 16px 18px;
+}
+
+#page-me .account-info > .col + .col {
+	margin-top: 8px;
+}
+
+#page-me .my-account-avatar {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: #eaf4ed;
+	border-radius: 999px;
+	width: 48px;
+	height: 48px;
+}
+
+#page-me .my-account-name {
+	font-size: 16px;
+	color: var(--ink);
+}
+
+#page-me .my-account-item {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--ink);
+}
+
+#page-me .my-account-item-desc {
+	color: var(--muted);
+	font-size: 13px;
+	margin-top: 4px;
+}
+
+#page-me .my-account-item-link a {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px;
+	border-radius: 999px;
+	border: 1px solid var(--line);
+	background: #ffffff;
+	color: var(--accent-2);
+	text-decoration: none;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#page-me .my-account-item-link a:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 8px 20px rgba(18, 23, 20, 0.12);
+}
+
+#page-me .right-icon {
+	color: var(--accent);
+}
+
+#page-me .web-sidebar {
+	background: var(--surface);
+	border: 1px solid var(--line);
+	border-radius: 16px;
+	padding: 16px;
+	box-shadow: var(--shadow);
+}
+
+#page-me .web-sidebar .title,
+#page-me .web-sidebar h6 {
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+	font-size: 12px;
+	color: var(--muted);
+	margin: 0 0 10px;
+}
+
+#page-me .web-sidebar .sidebar-item a {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 8px 10px;
+	border-radius: 10px;
+	color: var(--accent-2);
+	text-decoration: none;
+}
+
+#page-me .web-sidebar .sidebar-item a:hover {
+	background: var(--surface-2);
+}
+
+#page-me .web-sidebar .sidebar-item a.active {
+	background: #eaf4ed;
+	color: var(--accent);
+	font-weight: 600;
+}
+
 .tft-transport .actions {
 	display: flex;
 	flex-wrap: wrap;
