@@ -307,6 +307,223 @@ body,
 	background: rgba(153, 27, 27, 0.06);
 }
 
+.tft-transport {
+	background: #ffffff;
+	min-height: 100vh;
+	padding: 56px 0 80px;
+	font-family: "Francois One", arial, serif;
+	color: var(--ink);
+}
+
+.tft-transport .wrap {
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 0 24px;
+}
+
+.tft-transport .header {
+	display: grid;
+	gap: 12px;
+	margin-bottom: 32px;
+}
+
+.tft-transport .eyebrow {
+	text-transform: uppercase;
+	font-size: 12px;
+	letter-spacing: 0.2em;
+	color: var(--muted);
+}
+
+.tft-transport h1 {
+	font-size: clamp(30px, 4vw, 44px);
+	margin: 0;
+}
+
+.tft-transport .subhead {
+	max-width: 680px;
+	color: var(--muted);
+	margin: 0;
+}
+
+.tft-transport .card {
+	background: var(--surface);
+	border: 1px solid var(--line);
+	border-radius: var(--border-radius-sm);
+	padding: 28px;
+	box-shadow: var(--shadow);
+}
+
+.tft-transport .stack {
+	display: grid;
+	gap: 22px;
+}
+
+.tft-transport .card-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 18px;
+}
+
+.tft-transport .section-card {
+	border: 1px solid var(--line);
+	border-radius: 18px;
+	padding: 20px;
+	background: var(--surface);
+	display: grid;
+	gap: 14px;
+	box-shadow: 0 8px 20px rgba(18, 23, 20, 0.06);
+}
+
+.tft-transport .section-head {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 13px;
+	text-transform: uppercase;
+	letter-spacing: 0.16em;
+	color: var(--accent-2);
+}
+
+.tft-transport .section-head::before {
+	content: "";
+	width: 26px;
+	height: 2px;
+	background: var(--accent);
+	display: inline-block;
+}
+
+.tft-transport .grid-2 {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px;
+}
+
+.tft-transport .field {
+	display: grid;
+	gap: 8px;
+}
+
+.tft-transport .inline-field {
+	align-items: center;
+	grid-template-columns: auto 1fr;
+}
+
+.tft-transport .checkbox-wrap {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	color: var(--muted);
+	font-size: 13px;
+}
+
+.tft-transport label {
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: var(--muted);
+}
+
+.tft-transport input,
+.tft-transport select {
+	border: 1px solid var(--line);
+	background: var(--surface);
+	border-radius: 12px;
+	padding: 12px 14px;
+	font-size: 14px;
+	transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tft-transport input:focus,
+.tft-transport select:focus {
+	outline: none;
+	border-color: var(--accent);
+	box-shadow: 0 0 0 3px rgba(24, 90, 42, 0.18);
+}
+
+.tft-transport .table-wrap {
+	border: 1px solid var(--line);
+	border-radius: 16px;
+	overflow: auto;
+	background: var(--surface);
+}
+
+.tft-transport .transport-table {
+	width: 100%;
+	border-collapse: collapse;
+	min-width: 780px;
+}
+
+.tft-transport .transport-table th,
+.tft-transport .transport-table td {
+	border-bottom: 1px solid var(--line);
+	padding: 10px;
+	text-align: left;
+	font-size: 13px;
+}
+
+.tft-transport .transport-table th {
+	background: var(--surface-2);
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--accent-2);
+}
+
+.tft-transport .transport-table input {
+	width: 100%;
+	border: 1px solid var(--line);
+	border-radius: 10px;
+	padding: 8px 10px;
+	font-size: 13px;
+}
+
+.tft-transport .transport-table select {
+	width: 100%;
+	border: 1px solid var(--line);
+	border-radius: 10px;
+	padding: 8px 10px;
+	font-size: 13px;
+	background: var(--surface);
+}
+
+.tft-transport .row-actions {
+	width: 44px;
+	text-align: center;
+}
+
+.tft-transport .row-remove {
+	border: 1px solid var(--line);
+	background: #fff5f5;
+	color: #991b1b;
+	border-radius: 10px;
+	width: 32px;
+	height: 32px;
+	font-size: 16px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.tft-transport .row-remove:hover {
+	background: #fee2e2;
+}
+
+.tft-transport .actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	justify-content: flex-end;
+}
+
+@media (max-width: 900px) {
+	.tft-transport .grid-2,
+	.tft-transport .card-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.tft-transport .card {
+		padding: 20px;
+	}
+}
+
 @media (max-width: 900px) {
 	.tft-register .grid {
 		grid-template-columns: 1fr;

@@ -1,0 +1,230 @@
+{% from "frappe/templates/includes/avatar_macro.html" import avatar %}
+{% extends "templates/web.html" %}
+
+{% block title %}
+	{{ _("Transportation Request") }}
+{% endblock %}
+{% block sidebar %}{% endblock %}
+
+{% block page_content %}
+<section class="tft-transport">
+	<div class="wrap">
+		<div class="header">
+			<span class="eyebrow">{{ _("Transportation Request") }}</span>
+			<h1>{{ _("Confirmation required for receipt of request and delivery") }}</h1>
+			<p class="subhead">
+				{{ _("Provide the shipment details below. Our team will confirm pickup and delivery once received.") }}
+			</p>
+		</div>
+
+		<form class="card stack" method="post" action="#">
+			<div class="card-grid">
+				<div class="section-card">
+					<div class="section-head">{{ _("Supplier") }}</div>
+					<div class="grid-2">
+						<div class="field">
+							<label for="supplier_email">{{ _("Email / Fax") }}</label>
+							<input id="supplier_email" name="supplier_email" type="text" placeholder="{{ _('info@transport.com') }}" required />
+						</div>
+						<div class="field">
+							<label for="supplier_phone">{{ _("Phone") }}</label>
+							<input id="supplier_phone" name="supplier_phone" type="tel" placeholder="{{ _('514-494-9484') }}" required />
+						</div>
+					</div>
+					<div class="grid-2">
+						<div class="field">
+							<label for="po_number">{{ _("P.O. Number") }}</label>
+							<input id="po_number" name="po_number" type="text" placeholder="{{ _('PO0382328') }}" required />
+						</div>
+						<div class="field">
+							<label for="request_date">{{ _("Date") }}</label>
+							<input id="request_date" name="request_date" type="date" required />
+						</div>
+					</div>
+					<div class="grid-2">
+						<div class="field">
+							<label for="business_unit">{{ _("Business Unit Name") }}</label>
+							<input id="business_unit" name="business_unit" type="text" placeholder="{{ _('Bell Canada') }}" required />
+						</div>
+						<div class="field">
+							<label for="contact_name">{{ _("Contact Name") }}</label>
+							<input id="contact_name" name="contact_name" type="text" placeholder="{{ _('Charlene Sousa') }}" required />
+						</div>
+					</div>
+					<div class="grid-2">
+						<div class="field">
+							<label for="contact_phone">{{ _("Contact Phone") }}</label>
+							<input id="contact_phone" name="contact_phone" type="tel" placeholder="{{ _('416-650-9488') }}" required />
+						</div>
+						<div class="field">
+							<label for="contact_email">{{ _("Contact Email") }}</label>
+							<input id="contact_email" name="contact_email" type="email" placeholder="{{ _('contact@company.com') }}" />
+						</div>
+					</div>
+				</div>
+
+				<div class="section-card">
+					<div class="section-head">{{ _("Request Details") }}</div>
+					<div class="grid-2">
+						<div class="field">
+							<label for="pickup_date">{{ _("Available pickup date") }}</label>
+							<input id="pickup_date" name="pickup_date" type="date" required />
+						</div>
+						<div class="field">
+							<label for="delivery_date">{{ _("Delivery required by") }}</label>
+							<input id="delivery_date" name="delivery_date" type="date" required />
+						</div>
+					</div>
+					<div class="grid-2">
+						<div class="field">
+							<label for="keys_location">{{ _("Location of keys") }}</label>
+							<input id="keys_location" name="keys_location" type="text" placeholder="{{ _('Gas cap, driver side floor, lock box') }}" required />
+						</div>
+						<div class="field">
+							<label for="vehicle_qty">{{ _("Quantity of vehicles") }}</label>
+							<input id="vehicle_qty" name="vehicle_qty" type="number" min="1" placeholder="{{ _('1') }}" required />
+						</div>
+					</div>
+					<div class="field inline-field">
+						<label for="multi_address">{{ _("Multiple pickup/dropoff locations") }}</label>
+						<div class="checkbox-wrap">
+							<input id="multi_address" name="multi_address" type="checkbox" />
+							<span>{{ _("Add more than one From/To address") }}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-grid" data-single-address>
+				<div class="section-card">
+					<div class="section-head">{{ _("From") }}</div>
+					<div class="field">
+						<label for="from_company">{{ _("Company") }}</label>
+						<input id="from_company" name="from_company" type="text" placeholder="{{ _('Bell Canada') }}" required />
+					</div>
+					<div class="field">
+						<label for="from_address">{{ _("Address") }}</label>
+						<input id="from_address" name="from_address" type="text" placeholder="{{ _('1171 Pioneer Rd., Burlington') }}" required />
+					</div>
+					<div class="field">
+						<label for="from_contact">{{ _("Contact") }}</label>
+						<input id="from_contact" name="from_contact" type="text" placeholder="{{ _('Mechanics - 905-335-5701') }}" required />
+					</div>
+					<div class="field">
+						<label for="from_gate">{{ _("Code Gate / Fence") }}</label>
+						<input id="from_gate" name="from_gate" type="text" placeholder="{{ _('4-2-1-5') }}" />
+					</div>
+				</div>
+
+				<div class="section-card">
+					<div class="section-head">{{ _("To") }}</div>
+					<div class="field">
+						<label for="to_company">{{ _("Company") }}</label>
+						<input id="to_company" name="to_company" type="text" placeholder="{{ _('Bell Canada') }}" required />
+					</div>
+					<div class="field">
+						<label for="to_address">{{ _("Address") }}</label>
+						<input id="to_address" name="to_address" type="text" placeholder="{{ _('998 Wilson Ave., Kitchener') }}" required />
+					</div>
+					<div class="field">
+						<label for="to_contact">{{ _("Contact") }}</label>
+						<input id="to_contact" name="to_contact" type="text" placeholder="{{ _('Mechanics - 519-893-4646') }}" required />
+					</div>
+					<div class="field">
+						<label for="to_gate">{{ _("Code Gate / Fence") }}</label>
+						<input id="to_gate" name="to_gate" type="text" placeholder="{{ _('5-3-2-1') }}" />
+					</div>
+				</div>
+			</div>
+
+			<div class="section-card is-hidden" data-multi-address>
+				<div class="section-head">{{ _("Pickup / Dropoff Addresses") }}</div>
+				<div class="table-wrap">
+					<table class="transport-table transport-table--addresses">
+						<thead>
+							<tr>
+								<th>{{ _("Type") }}</th>
+								<th>{{ _("Company") }}</th>
+								<th>{{ _("Address") }}</th>
+								<th>{{ _("Contact") }}</th>
+								<th>{{ _("Code Gate / Fence") }}</th>
+								<th aria-label="{{ _('Remove') }}"></th>
+							</tr>
+						</thead>
+						<tbody id="address-rows">
+							<tr>
+								<td>
+									<select name="addr_type_1">
+										<option value="from">{{ _("From") }}</option>
+										<option value="to">{{ _("To") }}</option>
+									</select>
+								</td>
+								<td><input name="addr_company_1" type="text" placeholder="{{ _('Bell Canada') }}" /></td>
+								<td><input name="addr_address_1" type="text" placeholder="{{ _('1171 Pioneer Rd., Burlington') }}" /></td>
+								<td><input name="addr_contact_1" type="text" placeholder="{{ _('Mechanics - 905-335-5701') }}" /></td>
+								<td><input name="addr_gate_1" type="text" placeholder="{{ _('4-2-1-5') }}" /></td>
+								<td class="row-actions">
+									<button type="button" class="row-remove" data-remove-address-row aria-label="{{ _('Remove row') }}">✕</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="actions">
+					<button class="btn btn-sm secondary" type="button" data-add-address-row>
+						{{ _("Add address") }}
+					</button>
+				</div>
+			</div>
+
+			<div class="section-card">
+				<div class="section-head">{{ _("Vehicle Details") }}</div>
+				<div class="table-wrap">
+					<table class="transport-table">
+						<thead>
+							<tr>
+								<th>{{ _("Qty") }}</th>
+								<th>{{ _("Vehicle Number") }}</th>
+								<th>{{ _("VIN #") }}</th>
+								<th>{{ _("Make / Model") }}</th>
+								<th>{{ _("Description") }}</th>
+								<th>{{ _("Plate #") }}</th>
+								<th>{{ _("Hitch") }}</th>
+								<th aria-label="{{ _('Remove') }}"></th>
+							</tr>
+						</thead>
+						<tbody id="vehicle-rows">
+							<tr>
+								<td><input name="vehicle_qty_1" type="number" min="1" placeholder="1" /></td>
+								<td><input name="vehicle_number_1" type="text" placeholder="4521909" /></td>
+								<td><input name="vin_1" type="text" placeholder="1C3CCBAB5EN125414" /></td>
+								<td><input name="make_model_1" type="text" placeholder="{{ _('2014 Chrysler 200') }}" /></td>
+								<td><input name="description_1" type="text" placeholder="{{ _('Car') }}" /></td>
+								<td><input name="plate_1" type="text" placeholder="CTET844" /></td>
+								<td><input name="hitch_1" type="text" placeholder="{{ _('No') }}" /></td>
+								<td class="row-actions">
+									<button type="button" class="row-remove" data-remove-row aria-label="{{ _('Remove row') }}">✕</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="actions">
+					<button class="btn btn-sm secondary" type="button" data-add-vehicle-row>
+						{{ _("Add vehicle") }}
+					</button>
+				</div>
+			</div>
+
+			<div class="actions">
+				<button class="btn btn-sm btn-primary" type="submit">{{ _("Submit request") }}</button>
+				<button class="btn btn-sm secondary" type="button">{{ _("Save draft") }}</button>
+			</div>
+		</form>
+	</div>
+</section>
+{% endblock %}
+
+{% block script %}
+	<script>{% include "templates/includes/transportation_request.js" %}</script>
+{% endblock %}
