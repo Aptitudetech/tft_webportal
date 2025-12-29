@@ -9,15 +9,19 @@
   "from_address_section",
   "from_company",
   "from_address",
+  "from_start_time",
   "column_break_tdfy",
   "from_contact",
   "from_code",
+  "from_end_time",
   "to_address_section",
   "to_company",
   "to_address",
+  "to_start_time",
   "column_break_ljhe",
   "to_contact",
-  "to_code"
+  "to_code",
+  "to_end_time"
  ],
  "fields": [
   {
@@ -52,7 +56,7 @@
   {
    "fieldname": "from_code",
    "fieldtype": "Data",
-   "label": "Code Gate/Fence"
+   "label": "Code Gate/Fence/Key Location"
   },
   {
    "fieldname": "to_address_section",
@@ -86,14 +90,34 @@
   {
    "fieldname": "to_code",
    "fieldtype": "Data",
-   "label": "Code Gate/Fence"
+   "label": "Code Gate/Fence/Key Location"
+  },
+  {
+   "fieldname": "from_start_time",
+   "fieldtype": "Data",
+   "label": "Start Working Hour"
+  },
+  {
+   "fieldname": "from_end_time",
+   "fieldtype": "Data",
+   "label": "End Working Hour"
+  },
+  {
+   "fieldname": "to_start_time",
+   "fieldtype": "Data",
+   "label": "Start Working Hour"
+  },
+  {
+   "fieldname": "to_end_time",
+   "fieldtype": "Data",
+   "label": "End Working Hour"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-12-23 15:01:27.815843",
+ "modified": "2025-12-29 15:33:34.455414",
  "modified_by": "Administrator",
  "module": "Tft Webportal",
  "name": "Transportation Request Address",

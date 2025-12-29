@@ -13,7 +13,8 @@
   "column_break_qfcl",
   "type",
   "plate",
-  "uid"
+  "uid",
+  "user"
  ],
  "fields": [
   {
@@ -58,12 +59,18 @@
    "fieldtype": "Data",
    "label": "Meta",
    "unique": 1
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "Belongs To",
+   "options": "User"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-23 15:04:45.599707",
+ "modified": "2025-12-29 15:29:58.444639",
  "modified_by": "Administrator",
  "module": "Tft Webportal",
  "name": "Vehicles",

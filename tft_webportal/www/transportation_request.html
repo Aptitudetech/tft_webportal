@@ -12,6 +12,7 @@
 	<div class="sidebar-card">
 		<!-- <div class="sidebar-head">{{ _("Quick Links") }}</div> -->
 		<a class="sidebar-link active" href="/transportation_request">{{ _("Transportation Request") }}</a>
+		<a class="sidebar-link" href="/jobs_list">{{ _("Transportation Request List") }}</a>
 		<a class="sidebar-link" href="/me">{{ _("My Account") }}</a>
 	</div>
 </div>
@@ -50,27 +51,27 @@
 						</div>
 						<div class="field">
 							<label for="request_date">{{ _("Date") }}</label>
-							<input id="request_date" name="request_date" type="date" required value=today() />
+							<input id="request_date" name="request_date" type="date" value=today() required />
 						</div>
 					</div>
 					<div class="grid-2">
 						<div class="field">
 							<label for="business_unit">{{ _("Business Unit Name") }}</label>
-							<input id="business_unit" name="business_unit" type="text" placeholder="{{ _('Canada') }}" required />
+							<input id="business_unit" name="business_unit" type="text" placeholder="{{ _('Canada') }}" required value="{{business_unit or ''}}" />
 						</div>
 						<div class="field">
 							<label for="contact_name">{{ _("Contact Name") }}</label>
-							<input id="contact_name" name="contact_name" type="text" placeholder="{{ _('Charlene') }}" required autocomplete="off"/>
+							<input id="contact_name" name="contact_name" type="text" placeholder="{{ _('Charlene') }}" required autocomplete="off" value="{{contact_name or ''}}"/>
 						</div>
 					</div>
 					<div class="grid-2">
 						<div class="field">
 							<label for="contact_phone">{{ _("Contact Phone") }}</label>
-							<input id="contact_phone" name="contact_phone" type="tel" placeholder="{{ _('123-456-7890') }}" required />
+							<input id="contact_phone" name="contact_phone" type="tel" placeholder="{{ _('123-456-7890') }}" required value="{{contact_phone or ''}}" />
 						</div>
 						<div class="field">
 							<label for="contact_email">{{ _("Contact Email") }}</label>
-							<input id="contact_email" name="contact_email" type="email" placeholder="{{ _('contact@company.com') }}" />
+							<input id="contact_email" name="contact_email" type="email" placeholder="{{ _('contact@company.com') }}" value="{{contact_email or ''}}" />
 						</div>
 					</div>
 				</div>
@@ -115,7 +116,7 @@
 						<label for="from_address">{{ _("Address") }}</label>
 						<input type="text" autocomplete="off" id="from_address" 
 							class="address-input" name="from_address" list="from_address_list" placeholder="{{ _('1171 Pioneer Rd.') }}" required 
-							onchange="update_contact_info(this.value)" />
+							onchange="update_contact_info(this)" />
 						<datalist id="from_address_list">
 							{% for address in addresses %}
 								<option value="{{ address.name }}" >{{ address.display }}</option>
@@ -128,17 +129,17 @@
 					</div>
 					<div class="field">
 						<label for="from_company">{{ _("Company") }}</label>
-						<input id="from_company" name="from_company" type="text" placeholder="{{ _('Canada') }}" required />
+						<input id="from_company" name="from_company" type="text" placeholder="{{ _('Canada') }}" />
 					</div>
-					<span>Hours of Operation</span>
+					<span>{{_("Hours of Operation")}}</span>
 					<div class="grid-2">
 						<div class="field">
 							<label for="from_start_hour">{{ _("Start Working Hours") }}</label>
-							<input id="from_start_hour" name="from_start_hour" type="time" placeholder="{{ _('0900') }}" />
+							<input id="from_start_hour" name="from_start_hour" type="time" placeholder="{{ _('0900') }}" value='08:00'/>
 						</div>
 						<div class="field">
 							<label for="from_end_hour">{{ _("End Working Hours") }}</label>
-							<input id="from_end_hour" name="from_end_hour" type="time" placeholder="{{ _('1700') }}" />
+							<input id="from_end_hour" name="from_end_hour" type="time" placeholder="{{ _('1700') }}" value='17:00' />
 						</div>
 					</div>
 					<div class="field">
@@ -151,7 +152,13 @@
 					<div class="section-head">{{ _("To") }}</div>
 					<div class="field">
 						<label for="to_address">{{ _("Address") }}</label>
-						<input id="to_address" class="address-input" name="to_address" type="text" placeholder="{{ _('998 Wilson Ave.') }}" required />
+						<input id="to_address" class="address-input" name="to_address" list="to_address_list" type="text" placeholder="{{ _('998 Wilson Ave.') }}" required
+						onchange="update_contact_info(this)" />
+						<datalist id="to_address_list">
+							{% for address in addresses %}
+								<option value="{{ address.name }}" >{{ address.display }}</option>
+							{% endfor %}
+						</datalist>
 					</div>
 					<div class="field">
 						<label for="to_contact">{{ _("Contact") }}</label>
@@ -159,17 +166,17 @@
 					</div>
 					<div class="field">
 						<label for="to_company">{{ _("Company") }}</label>
-						<input id="to_company" name="to_company" type="text" placeholder="{{ _('Canada') }}" required />
+						<input id="to_company" name="to_company" type="text" placeholder="{{ _('Canada') }}" />
 					</div>
 					<span>Hours of Operation</span>
 					<div class="grid-2">
 						<div class="field">
 							<label for="to_start_hour">{{ _("Start Working Hours") }}</label>
-							<input id="to_start_hour" name="to_start_hour" type="time" placeholder="{{ _('0900') }}" />
+							<input id="to_start_hour" name="to_start_hour" type="time" placeholder="{{ _('0900') }}" value='08:00' />
 						</div>
 						<div class="field">
 							<label for="to_end_hour">{{ _("End Working Hours") }}</label>
-							<input id="to_end_hour" name="to_end_hour" type="time" placeholder="{{ _('1700') }}" />
+							<input id="to_end_hour" name="to_end_hour" type="time" placeholder="{{ _('1700') }}" value='17:00' />
 						</div>
 					</div>
 					<div class="field">
@@ -236,10 +243,24 @@
 						</thead>
 						<tbody id="vehicle-rows">
 							<tr>
+								<td>
+									<input name="vin_1" list="vin_list" type="text" placeholder="1C3CCBAB5EN125414" onchange="update_vehicle_info(this)" />
+									<datalist id="vin_list">
+										{% for vehicle in vehicles %}
+											<option value="{{ vehicle.vin }}" >{{ vehicle.display }}</option>
+										{% endfor %}
+									</datalist>
+								</td>
 								<td><input name="vehicle_number_1" type="text" placeholder="4521909" /></td>
-								<td><input name="vin_1" type="text" placeholder="1C3CCBAB5EN125414" /></td>
 								<td><input name="make_model_1" type="text" placeholder="{{ _('2014 Chrysler 200') }}" /></td>
-								<td><input name="description_1" type="text" placeholder="{{ _('Car') }}" /></td>
+								<td>
+									<input name="description_1" list="description_list" type="text" placeholder="{{ _('Car') }}" />
+									<datalist id="description_list">
+										{% for type in vehicle_description %}
+											<option value="{{ type }}" >{{ type }}</option>
+										{% endfor %}
+									</datalist>
+								</td>
 								<td><input name="plate_1" type="text" placeholder="CTET844" /></td>
 								<td><select name="hitch_1">
 									<option value="No" selected>No</option>
@@ -260,7 +281,7 @@
 			</div>
 
 			<div class="actions">
-				<button class="btn btn-sm btn-primary" type="submit">{{ _("Submit request") }}</button>
+				<button class="btn btn-sm btn-primary" type="submit" id="submit_request">{{ _("Submit request") }}</button>
 			</div>
 		</form>
 	</div>
@@ -270,45 +291,4 @@
 {% block script %}
 	<script>{% include "templates/includes/transportation_request.js" %}</script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTO_ahca5PuAOs76Lpr40VuBKnHXkLuNI&libraries=places&callback=initAutocomplete" async defer></script>
-	<script>
-		/* -------------- autocomplete initialization -------------- */
-		let from_autocomplete;
-		let to_autocomplete;
-
-		function initAutocomplete() {
-			const from_address = document.getElementById("from_address");
-			from_autocomplete = new google.maps.places.Autocomplete(from_address, {types: ["address"],});
-			from_autocomplete.setComponentRestrictions({country: ["us", "ca"],})
-			from_autocomplete.addListener("place_changed", fromonPlaceChanged);
-
-			/* ------------- to address ------------ */
-			const to_address = document.getElementById("to_address");
-			to_autocomplete = new google.maps.places.Autocomplete(to_address, {types: ["address"],});
-			to_autocomplete.setComponentRestrictions({country: ["us", "ca"],});
-			to_autocomplete.addListener("place_changed", toonPlaceChanged);
-		}
-
-		function fromonPlaceChanged() {
-			const place = from_autocomplete.getPlace();
-			let fromaddress = place.formatted_address;
-			document.getElementById("from_address").value = fromaddress;
-		}
-
-		function toonPlaceChanged() {
-			const place = to_autocomplete.getPlace();
-			let toaddress = place.formatted_address;
-			document.getElementById("to_address").value = toaddress;
-		}
-		/* -------------- end of autocomplete initialization -------------- */
-	</script>
-	<script>
-		const addresses = {{ addresses | safe }};
-		function update_contact_info(value){
-			for (let i in addresses) {
-				if (addresses[i].name === value) {
-					document.getElementById("from_contact").value = addresses[i].phone;
-				}
-			}
-		}
-	</script>
 {% endblock %}

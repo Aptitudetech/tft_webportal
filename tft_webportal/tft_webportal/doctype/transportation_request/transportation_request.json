@@ -17,8 +17,7 @@
   "available_pickup_date",
   "delivery_required_by",
   "column_break_yqgx",
-  "quantity",
-  "location_of_keys",
+  "notes",
   "section_break_ecbo",
   "addresses",
   "section_break_ukjx",
@@ -40,7 +39,7 @@
   {
    "fieldname": "p_o_number",
    "fieldtype": "Data",
-   "label": "P O Number"
+   "label": "PO Number"
   },
   {
    "fieldname": "date",
@@ -95,17 +94,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "1",
-   "fieldname": "quantity",
-   "fieldtype": "Int",
-   "label": "Quantity of Vehicles"
-  },
-  {
-   "fieldname": "location_of_keys",
-   "fieldtype": "Data",
-   "label": "Location of Keys"
-  },
-  {
    "fieldname": "section_break_ecbo",
    "fieldtype": "Section Break"
   },
@@ -124,12 +112,17 @@
    "fieldtype": "Table",
    "label": "Vehicle",
    "options": "Transportation Request Vehicle"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Long Text",
+   "label": "Notes"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-23 15:05:33.988203",
+ "modified": "2025-12-29 15:32:44.572325",
  "modified_by": "Administrator",
  "module": "Tft Webportal",
  "name": "Transportation Request",
