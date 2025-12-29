@@ -1,6 +1,6 @@
 {
  "actions": [],
- "allow_rename": 1,
+ "autoname": "autoincrement",
  "creation": "2025-12-23 15:05:33.988203",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -122,10 +122,11 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-29 15:32:44.572325",
+ "modified": "2025-12-29 18:08:05.602118",
  "modified_by": "Administrator",
  "module": "Tft Webportal",
  "name": "Transportation Request",
+ "naming_rule": "Autoincrement",
  "owner": "Administrator",
  "permissions": [
   {

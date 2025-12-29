@@ -219,8 +219,8 @@ function update_contact_info(input_element) {
 		if (address_list[i].name === value) {
 			document.getElementById(input_element.name === "from_address" ? "from_contact" : "to_contact").value = address_list[i].phone || '';
 			document.getElementById(input_element.name === "from_address" ? "from_company" : "to_company").value = address_list[i].company || '';
-			document.getElementById(input_element.name === "from_address" ? "from_start_hour" : "to_start_hour").value = address_list[i].from_time || '';
-			document.getElementById(input_element.name === "from_address" ? "from_end_hour" : "to_end_hour").value = address_list[i].to_time || '';
+			document.getElementById(input_element.name === "from_address" ? "from_start_hour" : "to_start_hour").value = address_list[i].from_time || '08:00';
+			document.getElementById(input_element.name === "from_address" ? "from_end_hour" : "to_end_hour").value = address_list[i].to_time || '17:00';
 		}
 	}
 }
@@ -390,7 +390,10 @@ function create_request(data){
 		freeze_message: __("Creating Transportation Request..."),
 		callback: function (r) {
 			if (r.message) {
-				frappe.msgprint({title: "Success", message: r.message.message, indicator: "green"});
+				frappe.show_alert(__(r.message.message), 300);
+				setTimeout(() => {
+					window.location.reload();
+				}, 1000);
 			}
 		}
 	});

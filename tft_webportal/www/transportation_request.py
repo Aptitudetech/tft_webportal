@@ -1,7 +1,8 @@
 import frappe
 from frappe import _
-from datetime import datetime
 from frappe.utils import getdate
+
+from datetime import datetime
 
 def get_context(context):
 	context.addresses = []
@@ -33,11 +34,11 @@ def get_context(context):
 	""",(frappe.session.user), as_dict=1)
 
 	for addr in addresses:
-		if addr.custom_company == None: addr.company = ""
+		if addr.custom_company == None: addr.custom_company = ""
 		addr.from_time = datetime.strptime(str(addr.custom_from_time), "%H:%M:%S").strftime("%H:%M") if addr.custom_from_time else ""
 		addr.to_time = datetime.strptime(str(addr.custom_to_time), "%H:%M:%S").strftime("%H:%M") if addr.custom_to_time else ""
-		addr.display = ", ".join(filter(None, [addr.company, addr.address_line1, addr.city, addr.state, addr.pincode, addr.country]))
-		context.addresses.append({"name": addr.address_line1, "display": addr.display, "phone": addr.phone, "company": addr.company, "from_time": addr.from_time, "to_time": addr.to_time})
+		addr.display = ", ".join(filter(None, [addr.custom_company, addr.address_line1, addr.city, addr.state, addr.pincode, addr.country]))
+		context.addresses.append({"name": addr.address_line1, "display": addr.display, "phone": addr.phone, "company": addr.custom_company, "from_time": addr.from_time, "to_time": addr.to_time})
 
 	# Load vehicles
 	vehicles = frappe.db.get_all("Vehicles", filters={"user": ["in", users]}, fields=["vehicle_number", "make", "type", "plate", "vin", "cables"])
@@ -78,8 +79,8 @@ def create_request(data):
 
 		# Address resolution
 		addresses = payload.get("addresses")
-		resolve_address(addresses.get("from"), supplier)
-		resolve_address(addresses.get("to"), supplier)
+		resolve_address(addresses.get("from"), supplier, payload.get("business_unit"))
+		resolve_address(addresses.get("to"), supplier, payload.get("business_unit"))
 
 		# Vehicle Resolution
 		resolve_vehicle(payload, supplier)
@@ -124,7 +125,7 @@ def create_request(data):
 		frappe.error_log("Error", f'{e}')
 
 #---------------- address resolution ----------------- #
-def resolve_address(payload, username):
+def resolve_address(payload, username, business_unit=None):
 	addr = payload.get("address")
 	if not addr: return None
 	
@@ -135,7 +136,7 @@ def resolve_address(payload, username):
 	link = frappe._dict({"link_doctype": "User", "link_name": username})
 	address = frappe.get_doc({
 		"doctype": "Address", "address_type": "Shipping",
-		"address_title": addr.get("address_line1"), "custom_company": payload.get("company"),
+		"address_title": addr.get("address_line1"), "custom_company": payload.get("company") or business_unit,
 		"phone": payload.get("phone"), "custom_from_time": payload.get("from_time"), "custom_to_time": payload.get("to_time"), **addr
 	})
 	address.append("links", link)
