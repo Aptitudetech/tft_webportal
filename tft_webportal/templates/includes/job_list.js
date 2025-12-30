@@ -1,3 +1,6 @@
+window.jobs = {};
+window.jobs.limit = 20;
+
 frappe.ready(() => {
 	const statusSelect = document.getElementById("filter_status");
 	const pickupInput = document.getElementById("filter_pickup");

@@ -16,6 +16,7 @@
   "section_break_zsvf",
   "available_pickup_date",
   "delivery_required_by",
+  "status",
   "column_break_yqgx",
   "notes",
   "section_break_ecbo",
@@ -117,12 +118,19 @@
    "fieldname": "notes",
    "fieldtype": "Long Text",
    "label": "Notes"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nConfirmed\nCompleted"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-29 18:08:05.602118",
+ "modified": "2025-12-30 08:31:30.577838",
  "modified_by": "Administrator",
  "module": "Tft Webportal",
  "name": "Transportation Request",

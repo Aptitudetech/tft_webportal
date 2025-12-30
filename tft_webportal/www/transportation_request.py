@@ -176,3 +176,13 @@ def resolve_vehicle(payload, username):
 			"plate": vehicle.get("plate"), "vin": vehicle.get("vin"), "cables": vehicle.get("hitch")
 		})
 		veh.insert(ignore_permissions=True)
+
+# ---------------- end ----------------- #
+
+# ------------------ get request ------------------ #
+@frappe.whitelist()
+def get_request(request):
+	# Enforce login
+	if frappe.session.user == "Guest": frappe.throw(_("Please login to continue"), frappe.PermissionError)
+	job = frappe.get_doc("Transportation Request", request, ignore_permissions=True)
+	return job.as_dict()

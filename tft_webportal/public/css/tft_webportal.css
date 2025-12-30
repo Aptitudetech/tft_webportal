@@ -872,6 +872,11 @@ a.sidebar-link.active {
 	color: var(--accent);
 }
 
+.tft-jobs .status-pending {
+	background: rgba(24, 90, 42, 0.08);
+	color: var(--accent);
+}
+
 .tft-jobs .status-confirmed {
 	background: rgba(34, 197, 94, 0.12);
 	color: #15803d;

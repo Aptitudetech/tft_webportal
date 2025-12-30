@@ -41,7 +41,7 @@
 					<label for="filter_status">{{ _("Status") }}</label>
 					<select id="filter_status" name="filter_status">
 						<option value="">{{ _("All") }}</option>
-						<option value="in_progress">{{ _("In Progress") }}</option>
+						<option value="pending">{{ _("Pending") }}</option>
 						<option value="confirmed">{{ _("Confirmed") }}</option>
 						<option value="completed">{{ _("Completed") }}</option>
 					</select>
@@ -57,7 +57,7 @@
 			</div>
 			<div class="job-table">
 				<div class="job-row job-head">
-					<div>{{ _("Request ID") }}</div>
+					<div>{{ _("#") }}</div>
 					<div>{{ _("Date") }}</div>
 					<div>{{ _("Pickup") }}</div>
 					<div>{{ _("Delivery") }}</div>
@@ -65,33 +65,21 @@
 					<div>{{ _("Status") }}</div>
 					<div></div>
 				</div>
-				<div class="job-row" data-status="in_progress" data-pickup="1171 Pioneer Rd, Burlington" data-delivery="998 Wilson Ave, Kitchener">
-					<div>#TR-2041</div>
-					<div>Mar 12, 2025</div>
-					<div>1171 Pioneer Rd, Burlington</div>
-					<div>998 Wilson Ave, Kitchener</div>
-					<div>3</div>
-					<div><span class="status-pill status-in-progress">{{ _("In Progress") }}</span></div>
-					<div><a class="row-link" href="#">{{ _("View") }}</a></div>
-				</div>
-				<div class="job-row" data-status="confirmed" data-pickup="Toronto, ON" data-delivery="Montreal, QC">
-					<div>#TR-2037</div>
-					<div>Mar 10, 2025</div>
-					<div>Toronto, ON</div>
-					<div>Montreal, QC</div>
-					<div>1</div>
-					<div><span class="status-pill status-confirmed">{{ _("Confirmed") }}</span></div>
-					<div><a class="row-link" href="#">{{ _("View") }}</a></div>
-				</div>
-				<div class="job-row" data-status="completed" data-pickup="Ottawa, ON" data-delivery="Kingston, ON">
-					<div>#TR-2029</div>
-					<div>Mar 05, 2025</div>
-					<div>Ottawa, ON</div>
-					<div>Kingston, ON</div>
-					<div>2</div>
-					<div><span class="status-pill status-completed">{{ _("Completed") }}</span></div>
-					<div><a class="row-link" href="#">{{ _("View") }}</a></div>
-				</div>
+				{% for c, a in enumerate(jobs, start=1) %}
+					<div class="job-row" data-status="{{a.status | lower}}" data-pickup="{{a.from_address}}" data-delivery="{{a.to_address}}">
+						<div>{{c}}</div>
+						<div>{{a.date}}</div>
+						<div>{{a.from_address}}</div>
+						<div>{{a.to_address}}</div>
+						<div>{{ a.vehicles }}</div>
+						<div><span class="status-pill status-{{ a.status | lower }}">{{ a.status }}</span></div>
+						<div><a class="row-link btn" href="/transportation_request?request={{a.name}}&view=1">{{ _("View") }}</a></div>
+					</div>
+				{% else %}
+					<div class="job-row">
+						<p>{{ _("No transportation requests found.") }}</p>
+					</div>
+				{% endfor %}
 			</div>
 		</div>
 	</div>
