@@ -18,7 +18,7 @@ frappe.ready(() => {
 		if (!query) {
 			return true;
 		}
-		return value.toLowerCase().includes(query.toLowerCase());
+		return String(value || "").toLowerCase().includes(query.toLowerCase());
 	}
 
 	function applyFilters() {
@@ -69,15 +69,19 @@ function fetchJobs(limit) {
 			table.append('<div class="job-row"><div></div><div></div><div>{{ _("No transportation requests found.") }}</div><div></div><div></div><div></div></div>')
             return;
         }
-		jobs.forEach((c, a) => {
-			let row = $(`<div class="job-row" data-status="${a.status.toLowerCase()}" data-pickup="${a.from_address}" data-delivery="${a.to_address}">`);
-			row.append(`<div>${c}</div>`);
-			row.append(`<div>${a.date}</div>`);
-			row.append(`<div>${a.from_address}</div>`);
-			row.append(`<div>${a.to_address}</div>`);
-			row.append(`<div>${a.vehicles}</div>`);
-			row.append(`<div><span class="status-pill status-${ a.status.toLowerCase() }">${ a.status }</span></div>`);
-			row.append(`<div><a class="row-link btn" href="/transportation_request?request=${a.name}&view=1">${ _("View") }</a></div>`);
+		jobs.forEach((job, c) => {
+			const status = String(job.status || "");
+			const statusKey = status.toLowerCase();
+			const fromAddress = job.from_address || "";
+			const toAddress = job.to_address || "";
+			let row = $(`<div class="job-row" data-status="${statusKey}" data-pickup="${fromAddress}" data-delivery="${toAddress}">`);
+			row.append(`<div>${c+1}</div>`);
+			row.append(`<div>${job.date || ""}</div>`);
+			row.append(`<div>${fromAddress}</div>`);
+			row.append(`<div>${toAddress}</div>`);
+			row.append(`<div>${job.vehicles || 0}</div>`);
+			row.append(`<div><span class="status-pill status-${statusKey}">${status}</span></div>`);
+			row.append(`<div><a class="row-link btn" href="/transportation_request?request=${job.name}&view=1">${ __("View") }</a></div>`);
 			table.append(row);
         });
 	});
