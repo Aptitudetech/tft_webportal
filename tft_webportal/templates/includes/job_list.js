@@ -10,9 +10,7 @@ frappe.ready(() => {
 	const statusSelect = document.getElementById("filter_status");
 	const pickupInput = document.getElementById("filter_pickup");
 	const deliveryInput = document.getElementById("filter_delivery");
-	const rows = Array.from(document.querySelectorAll(".job-table .job-body .job-row")).filter(
-		(row) => !row.classList.contains("job-head")
-	);
+	const rowsContainer = document.querySelector(".job-body");
 
 	function matchesText(value, query) {
 		if (!query) {
@@ -26,7 +24,11 @@ frappe.ready(() => {
 		const pickupValue = pickupInput ? pickupInput.value.trim() : "";
 		const deliveryValue = deliveryInput ? deliveryInput.value.trim() : "";
 
+		const rows = Array.from(document.querySelectorAll(".job-body .job-row"));
 		rows.forEach((row) => {
+			if (!row.dataset || !("status" in row.dataset)) {
+				return;
+			}
 			const status = row.dataset.status || "";
 			const pickup = row.dataset.pickup || "";
 			const delivery = row.dataset.delivery || "";
@@ -51,9 +53,15 @@ frappe.ready(() => {
 	$(".load-more").click(function () {
 		let current_limit = window.jobs.limit + 20;
 		window.jobs.limit = current_limit;
-		console.log(`Fetching designs with limit ${current_limit}`);
 		fetchJobs(current_limit);
 	});
+
+	window.jobs.applyFilters = applyFilters;
+
+	if (rowsContainer) {
+		const observer = new MutationObserver(applyFilters);
+		observer.observe(rowsContainer, { childList: true });
+	}
 });
 
 function fetchJobs(limit) {
@@ -84,5 +92,9 @@ function fetchJobs(limit) {
 			row.append(`<div><a class="row-link btn" href="/transportation_request?request=${job.name}&view=1">${ __("View") }</a></div>`);
 			table.append(row);
         });
+
+		if (window.jobs.applyFilters) {
+			window.jobs.applyFilters();
+		}
 	});
 }
