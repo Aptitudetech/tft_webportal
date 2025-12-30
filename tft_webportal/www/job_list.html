@@ -65,7 +65,7 @@
 					<div>{{ _("Status") }}</div>
 					<div></div>
 				</div>
-				<div class="job-row">
+				<div class="job-row" data-status="in_progress" data-pickup="1171 Pioneer Rd, Burlington" data-delivery="998 Wilson Ave, Kitchener">
 					<div>#TR-2041</div>
 					<div>Mar 12, 2025</div>
 					<div>1171 Pioneer Rd, Burlington</div>
@@ -74,7 +74,7 @@
 					<div><span class="status-pill status-in-progress">{{ _("In Progress") }}</span></div>
 					<div><a class="row-link" href="#">{{ _("View") }}</a></div>
 				</div>
-				<div class="job-row">
+				<div class="job-row" data-status="confirmed" data-pickup="Toronto, ON" data-delivery="Montreal, QC">
 					<div>#TR-2037</div>
 					<div>Mar 10, 2025</div>
 					<div>Toronto, ON</div>
@@ -83,7 +83,7 @@
 					<div><span class="status-pill status-confirmed">{{ _("Confirmed") }}</span></div>
 					<div><a class="row-link" href="#">{{ _("View") }}</a></div>
 				</div>
-				<div class="job-row">
+				<div class="job-row" data-status="completed" data-pickup="Ottawa, ON" data-delivery="Kingston, ON">
 					<div>#TR-2029</div>
 					<div>Mar 05, 2025</div>
 					<div>Ottawa, ON</div>
@@ -99,5 +99,5 @@
 {% endblock %}
 
 {% block script %}
-	
+	<script>{% include "templates/includes/job_list.js" %}</script>
 {% endblock %}
