@@ -34,24 +34,20 @@
 			<div class="card-grid">
 				<div class="section-card">
 					<div class="section-head">{{ _("Company / Individual") }}</div>
-					<div class="grid-2">
+					<div class="grid-2 hidden">
 						<div class="field">
 							<label for="supplier_email">{{ _("Email / Fax") }}</label>
 							<input id="supplier_email" name="supplier_email" type="text" placeholder="{{ _('info@transport.com') }}" required value="{{user_email}}" disabled />
 						</div>
-						<div class="field">
-							<label for="supplier_phone">{{ _("Phone") }}</label>
-							<input id="supplier_phone" name="supplier_phone" type="tel" placeholder="{{ _('123-456-7890') }}" required value="{{user_phone or ''}}" />
-						</div>
 					</div>
 					<div class="grid-2">
 						<div class="field">
-							<label for="po_number">{{ _("P.O. Number") }}</label>
-							<input id="po_number" name="po_number" type="text" placeholder="{{ _('PO-123') }}" required />
-						</div>
-						<div class="field">
 							<label for="request_date">{{ _("Date") }}</label>
 							<input id="request_date" name="request_date" type="date" value=today() required />
+						</div>
+						<div class="field">
+							<label for="supplier_phone">{{ _("Phone") }}</label>
+							<input id="supplier_phone" name="supplier_phone" type="tel" placeholder="{{ _('123-456-7890') }}" required value="{{user_phone or ''}}" />
 						</div>
 					</div>
 					<div class="grid-2">
@@ -232,10 +228,12 @@
 					<table class="transport-table">
 						<thead>
 							<tr>
-								<th>{{ _("Vehicle Number") }}</th>
 								<th>{{ _("VIN #") }}</th>
+								<th>{{ _("Vehicle Number") }}</th>
+								<th>{{ _("PO Number") }}</th>
 								<th>{{ _("Make / Model") }}</th>
 								<th>{{ _("Description") }}</th>
+								<th>{{ _("Fuel Type") }}</th>
 								<th>{{ _("Plate #") }}</th>
 								<th>{{ _("Hitch") }}</th>
 								<th aria-label="{{ _('Remove') }}"></th>
@@ -252,12 +250,21 @@
 									</datalist>
 								</td>
 								<td><input name="vehicle_number_1" type="text" placeholder="4521909" /></td>
+								<td><input name="po_number_1" type="text" placeholder="PO-123" /></td>
 								<td><input name="make_model_1" type="text" placeholder="{{ _('2014 Chrysler 200') }}" /></td>
 								<td>
 									<input name="description_1" list="description_list" type="text" placeholder="{{ _('Car') }}" />
 									<datalist id="description_list">
 										{% for type in vehicle_description %}
 											<option value="{{ type }}" >{{ type }}</option>
+										{% endfor %}
+									</datalist>
+								</td>
+								<td>
+									<input name="fuel_type_1" list="fuel_type_list" type="text" placeholder="{{ _('Gasoline') }}" />
+									<datalist id="fuel_type_list">
+										{% for fuel in fuel_types %}
+											<option value="{{ fuel }}" >{{ fuel }}</option>
 										{% endfor %}
 									</datalist>
 								</td>

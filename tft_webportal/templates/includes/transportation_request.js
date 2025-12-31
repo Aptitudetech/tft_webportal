@@ -85,8 +85,10 @@ frappe.ready(() => {
 		const tr = document.createElement("tr");
 		tr.appendChild(buildCell(`vin_${rowIndex}`, "text", "1C3CCBAB5EN125414", "vin_list"));
 		tr.appendChild(buildCell(`vehicle_number_${rowIndex}`, "text", "4521909"));
+		tr.appendChild(buildCell(`po_number_${rowIndex}`, "text", "PO-123"));
 		tr.appendChild(buildCell(`make_model_${rowIndex}`, "text", "2014 Chrysler 200"));
 		tr.appendChild(buildCell(`description_${rowIndex}`, "text", "Car", "description_list"));
+		tr.appendChild(buildCell(`fuel_type_${rowIndex}`, "text", "Gas/Electric", "fuel_type_list"));
 		tr.appendChild(buildCell(`plate_${rowIndex}`, "text", "CTET844"));
 		tr.appendChild(buildSelectCell(`hitch_${rowIndex}`, [{ label: "No", value: "No" }, { label: "Yes", value: "Yes" }], "No"));
 		tr.appendChild(buildRemoveCell());
@@ -143,7 +145,7 @@ function view_request() {
 	// Load request data
 	frappe.call({
 		method: "tft_webportal.www.transportation_request.get_request",
-		args: { request: requestName },
+		args: { request_id: requestName },
 		callback: function(r) {
 			const request = r.message;
 			if (!request) return;
@@ -152,7 +154,6 @@ function view_request() {
 			$("#supplier_email").val(request.supplier);
 			$("#contact_email").val(request.supplier);
 			$("#request_date").val(request.date);
-			$("#po_number").val(request.po_number);
 			$("#business_unit").val(request.business_unit_name);
 			$("#contact_name").val(request.contact_name);
 			$("#contact_phone").val(request.contact_phone);
@@ -161,42 +162,40 @@ function view_request() {
 			$("#notes").val(request.notes);
 
 			// Fill addresses
-			$("#from_company").val(request.addresses[0].from_company);
-			$("#from_address").val(request.addresses[0].from_address);
-			$("#from_contact").val(request.addresses[0].from_contact);
-			$("#from_start_hour").val(request.addresses[0].from_start_time);
-			$("#from_end_hour").val(request.addresses[0].from_end_time);
-			$("#from_gate").val(request.addresses[0].from_code);
+			$("#from_company").val(request.from_company);
+			$("#from_address").val(request.from_address);
+			$("#from_contact").val(request.from_contact);
+			$("#from_start_hour").val(request.from_start_time);
+			$("#from_end_hour").val(request.from_end_time);
+			$("#from_gate").val(request.from_code);
 
-			$("#to_company").val(request.addresses[0].to_company);
-			$("#to_address").val(request.addresses[0].to_address);
-			$("#to_contact").val(request.addresses[0].to_contact);
-			$("#to_start_hour").val(request.addresses[0].to_start_time);
-			$("#to_end_hour").val(request.addresses[0].to_end_time);
-			$("#to_gate").val(request.addresses[0].to_code);
+			$("#to_company").val(request.to_company);
+			$("#to_address").val(request.to_address);
+			$("#to_contact").val(request.to_contact);
+			$("#to_start_hour").val(request.to_start_time);
+			$("#to_end_hour").val(request.to_end_time);
+			$("#to_gate").val(request.to_code);
 
 			// Fill vehicles dynamically
 			const $vehicleRows = $("#vehicle-rows");
 			$vehicleRows.empty();
-			request.vehicle.forEach((v, index) => {
-				const rowIndex = index + 1;
-				const hitchValue = v.cables ? "Yes" : "No";
-				const row = `<tr>
-					<td><input type="text" name="vin_${rowIndex}" value="${v.vin}"></td>
-					<td><input type="text" name="vehicle_number_${rowIndex}" value="${v.vehicle_number}"></td>
-					<td><input type="text" name="make_model_${rowIndex}" value="${v.make}"></td>
-					<td><input type="text" name="description_${rowIndex}" value="${v.type}"></td>
-					<td><input type="text" name="plate_${rowIndex}" value="${v.plate}"></td>
-					<td>
-						<select name="hitch_${rowIndex}">
-							<option value="No" ${hitchValue === "No" ? "selected" : ""}>No</option>
-							<option value="Yes" ${hitchValue === "Yes" ? "selected" : ""}>Yes</option>
-						</select>
-					</td>
-					<td class="row-actions"><button type="button" class="row-remove" aria-label="Remove row">✕</button></td>
-				</tr>`;
-				$vehicleRows.append(row);
-			});
+			const row = `<tr>
+				<td><input type="text" name="vin_1" value="${request.vin}"></td>
+				<td><input type="text" name="vehicle_number_1" value="${request.vehicle_number}"></td>
+				<td><input type="text" name="po_number_1" value="${request.p_o_number}"></td>
+				<td><input type="text" name="make_model_1" value="${request.make}"></td>
+				<td><input type="text" name="description_1" value="${request.type}"></td>
+				<td><input type="text" name="fuel_type_1" value="${request.fuel_type || ""}"></td>
+				<td><input type="text" name="plate_1" value="${request.plate}"></td>
+				<td>
+					<select name="hitch_1">
+						<option value="No" ${request.cables ? "" : "selected"}>No</option>
+						<option value="Yes" ${request.cables ? "selected" : ""}>Yes</option>
+					</select>
+				</td>
+				<td class="row-actions"><button type="button" class="row-remove" aria-label="Remove row">✕</button></td>
+			</tr>`;
+			$vehicleRows.append(row);
 
 			// Hide submit button in view mode
 			if (viewMode) {
@@ -204,6 +203,7 @@ function view_request() {
 				$("#submit_request").hide();
 				$(addBtn).hide();
 				$(".row-remove").hide();
+				$("input, select, textarea").attr("disabled", "disabled");
 			}
 		}
 	});
@@ -251,8 +251,9 @@ function mapGooglePlace(place) {
 		place.address_components.find(c => c.types.includes(type))?.[short ? "short_name" : "long_name"] || "";
 
 	return {
+		formatted_address: place.formatted_address,
 		address_line1: [get("street_number"), get("route")].filter(Boolean).join(" "),
-		city: get("locality") || get("sublocality"),
+		city: get("sublocality") || get("locality"),
 		state: get("administrative_area_level_1", true),
 		pincode: get("postal_code"),
 		country: get("country")
@@ -271,6 +272,7 @@ function update_vehicle_info(input_element) {
 			document.getElementsByName(`vehicle_number_${rowIndex}`)[0].value = vehicle_list[i].vehicle_number || '';
 			document.getElementsByName(`make_model_${rowIndex}`)[0].value = vehicle_list[i].make_model || '';
 			document.getElementsByName(`description_${rowIndex}`)[0].value = vehicle_list[i].description || '';
+			document.getElementsByName(`fuel_type_${rowIndex}`)[0].value = vehicle_list[i].fuel_type || '';
 			document.getElementsByName(`plate_${rowIndex}`)[0].value = vehicle_list[i].plate || '';
 			document.getElementsByName(`hitch_${rowIndex}`)[0].value = vehicle_list[i].hitch ? "Yes" : "No";
 		}
@@ -331,23 +333,29 @@ $("#request-form").on("submit", function (e) {
 
 	/* vehicle data */
 	const vehicles = [];
+	const flag_warning = false;
 	$("#vehicle-rows tr").each(function (index) {
 		const row_index = index + 1;
 		const hitch_val = $(this).find(`select[name="hitch_${row_index}"]`).val();
 		const hitch_boolean = hitch_val === "Yes" ? 1 : 0;
+		if ($(this).find(`input[name="po_number_${row_index}"]`).val() === "") {
+			flag_warning = true;
+		}
 
 		vehicles.push({
 			vehicle_number: $(this).find(`input[name="vehicle_number_${row_index}"]`).val(),
 			vin: $(this).find(`input[name="vin_${row_index}"]`).val().toUpperCase(),
+			po_number: $(this).find(`input[name="po_number_${row_index}"]`).val(),
 			make_model: $(this).find(`input[name="make_model_${row_index}"]`).val(),
 			description: $(this).find(`input[name="description_${row_index}"]`).val(),
 			plate: $(this).find(`input[name="plate_${row_index}"]`).val().toUpperCase(),
+			fuel_type: $(this).find(`input[name="fuel_type_${row_index}"]`).val(),
 			hitch: hitch_boolean
 		});
 	});
 
 	const data = {
-		request_date: $("[name='request_date']").val(), po_number: $("[name='po_number']").val(),
+		request_date: $("[name='request_date']").val(),
 		business_unit: $("[name='business_unit']").val(), contact_name: $("[name='contact_name']").val(),
 		contact_phone: $("[name='contact_phone']").val(), pickup_date: $("[name='pickup_date']").val(),
 		delivery_date: $("[name='delivery_date']").val(), notes: $("[name='notes']").val(),
@@ -361,9 +369,9 @@ $("#request-form").on("submit", function (e) {
 	};
 
 	warning = ""
-	if (!data.po_number && !data.notes){
+	if (flag_warning && !data.notes){
 		warning = __("Fields <b>PO Number</b> and <b>Notes</b> for instruction are left empty");
-	} else if (!data.po_number){
+	} else if (flag_warning){
 		warning = __("Field <b>PO Number</b> is left Empty");
 	}else if (!data.notes){
 		warning = __("Field <b>Notes</b> for instruction is left Empty");
@@ -391,9 +399,14 @@ function create_request(data){
 		callback: function (r) {
 			if (r.message) {
 				frappe.show_alert(__(r.message.message), 300);
-				setTimeout(() => {
-					window.location.reload();
-				}, 1000);
+				// setTimeout(() => {
+				// 	window.location.reload();
+				// }, 1000);
+				const addBtn = document.querySelector("[data-add-vehicle-row]");
+				$("#submit_request").hide();
+				$(addBtn).hide();
+				$(".row-remove").hide();
+				$("input, select, textarea").attr("disabled", "disabled");
 			}
 		}
 	});

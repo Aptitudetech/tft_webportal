@@ -26,26 +26,38 @@ def get_context(context):
 
 	addresses = frappe.db.sql("""
 		SELECT
-			a.name, a.address_title, a.address_line1, a.address_line2, a.city, a.state, a.pincode, a.country, a.phone,
-			a.custom_company, a.custom_from_time, a.custom_to_time
+			a.name, a.address_title, a.custom_company as company, a.custom_from_time as from_time, a.custom_to_time as to_time, 
+			a.address_line1, a.city, a.state, a.pincode, a.country, a.phone, a.custom_formatted_address as formatted_address
 		FROM `tabAddress` a
-		INNER JOIN `tabDynamic Link` dl ON dl.parent = a.name
-		WHERE dl.link_name = %s
-	""",(frappe.session.user), as_dict=1)
+			INNER JOIN `tabDynamic Link` dl ON dl.parent = a.name
+			WHERE dl.link_name IN %(users)s
+			AND dl.link_doctype = "User"
+		""", {"users": users}, as_dict=1)
 
 	for addr in addresses:
-		if addr.custom_company == None: addr.custom_company = ""
-		addr.from_time = datetime.strptime(str(addr.custom_from_time), "%H:%M:%S").strftime("%H:%M") if addr.custom_from_time else ""
-		addr.to_time = datetime.strptime(str(addr.custom_to_time), "%H:%M:%S").strftime("%H:%M") if addr.custom_to_time else ""
-		addr.display = ", ".join(filter(None, [addr.custom_company, addr.address_line1, addr.city, addr.state, addr.pincode, addr.country]))
-		context.addresses.append({"name": addr.address_line1, "display": addr.display, "phone": addr.phone, "company": addr.custom_company, "from_time": addr.from_time, "to_time": addr.to_time})
+		if addr.company == None: addr.company = ""
+		
+		addr.from_time = datetime.strptime(str(addr.from_time), "%H:%M:%S").strftime("%H:%M") if addr.from_time else ""
+		addr.to_time = datetime.strptime(str(addr.to_time), "%H:%M:%S").strftime("%H:%M") if addr.to_time else ""
+		addr.display = ", ".join(filter(None, [addr.company, addr.address_line1, addr.city, addr.state, addr.pincode, addr.country]))
+		context.addresses.append({
+			"name": addr.formatted_address if addr.formatted_address else addr.address_line1, 
+			"display": addr.display, "phone": addr.phone, "company": addr.company, "from_time": addr.from_time, "to_time": addr.to_time
+		})
+
 
 	# Load vehicles
-	vehicles = frappe.db.get_all("Vehicles", filters={"user": ["in", users]}, fields=["vehicle_number", "make", "type", "plate", "vin", "cables"])
+	vehicles = frappe.db.get_all("Client Vehicle", filters={"user": ["in", users]}, fields=["vehicle_number", "make", "type", "plate", "vin", "cables", "fuel_type"])
 	for vehicle in vehicles:
 		vehicle.display = ", ".join(filter(None, [vehicle.vehicle_number, vehicle.make, vehicle.type, vehicle.plate]))
-		context.vehicles.append({"vin": vehicle.vin, "display": vehicle.display, "vehicle_number": vehicle.vehicle_number, "make_model": vehicle.make, "description": vehicle.type, "plate": vehicle.plate, "hitch": vehicle.cables})
+		context.vehicles.append({
+			"vin": vehicle.vin, "display": vehicle.display, "vehicle_number": vehicle.vehicle_number, "make_model": vehicle.make, 
+			"description": vehicle.type, "plate": vehicle.plate, "hitch": vehicle.cables, "fuel_type": vehicle.fuel_type or ""
+		})
 	context.vehicle_description = frappe.get_all("Vehicle Type", pluck="name") or []
+
+	# load fuel types
+	context.fuel_types = frappe.get_all("Vehicle Fuel Type", pluck="name", ignore_permissions=1)
 
 # ------------------------------------------------------------- #
 
@@ -84,43 +96,28 @@ def create_request(data):
 
 		# Vehicle Resolution
 		resolve_vehicle(payload, supplier)
-	
-		# Address append
-		addresses = []
-		ad = {
-			"doctype": "Transportation Request Address", "from_company": payload.get("from_company"),
-			"from_address": payload.get("from_address"), "from_contact": payload.get("from_contact"),
-			"from_start_time": payload.get("from_start_hour"), "from_end_time": payload.get("from_end_hour"),
-			"from_code": payload.get("from_gate"), "to_company": payload.get("to_company"),
-			"to_address": payload.get("to_address"), "to_contact": payload.get("to_contact"),
-			"to_start_time": payload.get("to_start_hour"), "to_end_time": payload.get("to_end_hour"), "to_code": payload.get("to_gate")
-		}
-		
-		addresses.append(ad)
-
-		vehicles = []
-		for vehicle in payload.get("vehicles"):
-			v = {
-				"doctype": "Transportation Request Vehicle",
-				"vin": vehicle.get("vin"), "vehicle_number": vehicle.get("vehicle_number"),
-				"make": vehicle.get("make_model"), "type": vehicle.get("description"),
-				"plate": vehicle.get("plate"), "cables": vehicle.get("hitch")
-			}
-
-			vehicles.append(v)
 
 		# Create Transportation Request document
-		job = frappe.get_doc({
-			"doctype": "Transportation Request", "supplier": supplier,
-			"p_o_number": payload.get("po_number"),	"date": payload.get("request_date"),
-			"business_unit_name": payload.get("business_unit"),	"contact_name": payload.get("contact_name"),
-			"contact_phone": payload.get("contact_phone"), "available_pickup_date": pickup_dt,
-			"delivery_required_by": delivery_dt, "notes": payload.get("notes"),
-			"addresses": addresses, "vehicle": vehicles
-		})
+		for vehicle in payload.get("vehicles"):
+			job = frappe.get_doc({
+				"doctype": "Transportation Request", "supplier": supplier,
+				"p_o_number": vehicle.get("po_number"),	"date": payload.get("request_date"),
+				"business_unit_name": payload.get("business_unit"),	"contact_name": payload.get("contact_name"),
+				"contact_phone": payload.get("contact_phone"), "available_pickup_date": pickup_dt,
+				"delivery_required_by": delivery_dt, "notes": payload.get("notes"),
+				"from_company": payload.get("from_company"), "from_address": payload.get("from_address"),
+				"from_contact": payload.get("from_contact"), "from_start_time": payload.get("from_start_hour"),
+				"from_end_time": payload.get("from_end_hour"), "from_code": payload.get("from_gate"),
+				"to_company": payload.get("to_company"), "to_address": payload.get("to_address"),
+				"to_contact": payload.get("to_contact"), "to_start_time": payload.get("to_start_hour"),
+				"to_end_time": payload.get("to_end_hour"), "to_code": payload.get("to_gate"),
+				"vin": vehicle.get("vin"), "vehicle_number": vehicle.get("vehicle_number"),
+				"make": vehicle.get("make_model"), "type": vehicle.get("description"),
+				"fuel_type": vehicle.get("fuel_type"), "plate": vehicle.get("plate"), "cables": vehicle.get("hitch")
+			})
+			job.insert(ignore_permissions=True)
 
-		job.insert(ignore_permissions=True)
-		return frappe._dict({"job": job.name, "message": _("Job created successfully")})
+		return frappe._dict({"job": job.name, "message": _("Request(s) created successfully")})
 	except Exception as e:
 		frappe.error_log("Error", f'{e}')
 
@@ -131,11 +128,23 @@ def resolve_address(payload, username, business_unit=None):
 	
 	# Check if address already exists
 	existing = frappe.db.get_value("Address", {"address_line1": addr.get("address_line1"), "city": addr.get("city"), "pincode": addr.get("pincode")}, "name")
-	if existing: return existing
+	if existing:
+		users = frappe.db.get_all("User", filters={"approved_company": frappe.get_value("User", username, "approved_company")}, pluck="name")
+
+		# Check if the address is already linked to the users
+		link_exists = frappe.db.exists({"doctype": "Dynamic Link", "parent": existing, "link_doctype": "User", "link_name": ["in", users]})
+
+		if not link_exists:
+			link = {"link_doctype": "User", "link_name": username}
+			address_doc = frappe.get_doc("Address", existing, ignore_permissions=True)
+			address_doc.append("links", link)
+			address_doc.save(ignore_permissions=True)
+		return existing
 	
+	# Create a new address
 	link = frappe._dict({"link_doctype": "User", "link_name": username})
 	address = frappe.get_doc({
-		"doctype": "Address", "address_type": "Shipping",
+		"doctype": "Address", "address_type": "Shipping", "custom_formatted_address": addr.get("formatted_address"),
 		"address_title": addr.get("address_line1"), "custom_company": payload.get("company") or business_unit,
 		"phone": payload.get("phone"), "custom_from_time": payload.get("from_time"), "custom_to_time": payload.get("to_time"), **addr
 	})
@@ -163,7 +172,7 @@ def resolve_vehicle(payload, username):
 	users = frappe.db.get_all("User", filters={"approved_company": frappe.get_value("User", username, "approved_company")}, pluck="name")
 	# Insert vehicles if they do not already exist
 	for vehicle in vehicles:
-		existing = frappe.db.get_value("Vehicles", {"vin": vehicle.get("vin"), "user": ["in", users]}, ["name", "plate"])
+		existing = frappe.db.get_value("Client Vehicle", {"vin": vehicle.get("vin"), "user": ["in", users]}, ["name", "plate"])
 		if existing and existing[1] == vehicle.get("plate"):
 			continue
 		elif existing and existing[1] != vehicle.get("plate"):
@@ -172,8 +181,8 @@ def resolve_vehicle(payload, username):
 		
 		veh = frappe.get_doc({
 			"make": vehicle.get("make_model"), "type": vehicle.get("description"),
-			"doctype": "Vehicles", "user": username, "vehicle_number": vehicle.get("vehicle_number"),
-			"plate": vehicle.get("plate"), "vin": vehicle.get("vin"), "cables": vehicle.get("hitch")
+			"doctype": "Client Vehicle", "user": username, "vehicle_number": vehicle.get("vehicle_number"),
+			"plate": vehicle.get("plate"), "vin": vehicle.get("vin"), "cables": vehicle.get("hitch"), "fuel_type": vehicle.get("fuel_type"),
 		})
 		veh.insert(ignore_permissions=True)
 
@@ -181,8 +190,12 @@ def resolve_vehicle(payload, username):
 
 # ------------------ get request ------------------ #
 @frappe.whitelist()
-def get_request(request):
+def get_request(request_id):
 	# Enforce login
 	if frappe.session.user == "Guest": frappe.throw(_("Please login to continue"), frappe.PermissionError)
-	job = frappe.get_doc("Transportation Request", request, ignore_permissions=True)
-	return job.as_dict()
+	request = frappe.get_doc("Transportation Request", request_id, ignore_permissions=True)
+	request.from_start_time = datetime.strptime(str(request.from_start_time), "%H:%M:%S").strftime("%H:%M") if request.from_start_time else ""
+	request.from_end_time = datetime.strptime(str(request.from_end_time), "%H:%M:%S").strftime("%H:%M") if request.from_end_time else ""
+	request.to_start_time = datetime.strptime(str(request.to_start_time), "%H:%M:%S").strftime("%H:%M") if request.to_start_time else ""
+	request.to_end_time = datetime.strptime(str(request.to_end_time), "%H:%M:%S").strftime("%H:%M") if request.to_end_time else ""
+	return request.as_dict()

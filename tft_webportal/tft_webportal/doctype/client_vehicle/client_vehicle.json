@@ -9,10 +9,11 @@
   "vehicle_number",
   "vin",
   "make",
+  "plate",
   "cables",
   "column_break_qfcl",
   "type",
-  "plate",
+  "fuel_type",
   "uid",
   "user"
  ],
@@ -65,15 +66,21 @@
    "fieldtype": "Link",
    "label": "Belongs To",
    "options": "User"
+  },
+  {
+   "fieldname": "fuel_type",
+   "fieldtype": "Link",
+   "label": "Fuel Type",
+   "options": "Vehicle Fuel Type"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-29 15:29:58.444639",
+ "modified": "2025-12-31 11:35:21.712547",
  "modified_by": "Administrator",
  "module": "Tft Webportal",
- "name": "Vehicles",
+ "name": "Client Vehicle",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

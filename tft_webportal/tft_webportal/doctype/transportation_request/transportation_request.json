@@ -5,24 +5,46 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "request_details_tab",
   "supplier_info_section",
   "supplier",
-  "p_o_number",
-  "date",
-  "column_break_gsuo",
   "business_unit_name",
   "contact_name",
   "contact_phone",
+  "column_break_gsuo",
+  "date",
+  "p_o_number",
+  "status",
   "section_break_zsvf",
   "available_pickup_date",
-  "delivery_required_by",
-  "status",
   "column_break_yqgx",
+  "delivery_required_by",
+  "notes_section",
   "notes",
-  "section_break_ecbo",
-  "addresses",
-  "section_break_ukjx",
-  "vehicle"
+  "addresses_tab",
+  "address_info_section",
+  "from_company",
+  "from_address",
+  "from_contact",
+  "from_code",
+  "from_start_time",
+  "from_end_time",
+  "column_break_ljpd",
+  "to_company",
+  "to_address",
+  "to_contact",
+  "to_code",
+  "to_start_time",
+  "to_end_time",
+  "vehicle_tab",
+  "vin",
+  "vehicle_number",
+  "make",
+  "cables",
+  "column_break_cssp",
+  "plate",
+  "type",
+  "fuel_type"
  ],
  "fields": [
   {
@@ -95,28 +117,8 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "section_break_ecbo",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "addresses",
-   "fieldtype": "Table",
-   "label": "Addresses",
-   "options": "Transportation Request Address"
-  },
-  {
-   "fieldname": "section_break_ukjx",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "vehicle",
-   "fieldtype": "Table",
-   "label": "Vehicle",
-   "options": "Transportation Request Vehicle"
-  },
-  {
    "fieldname": "notes",
-   "fieldtype": "Long Text",
+   "fieldtype": "Small Text",
    "label": "Notes"
   },
   {
@@ -125,12 +127,145 @@
    "fieldtype": "Select",
    "label": "Status",
    "options": "Unassigned\nAssigned\nCompleted"
+  },
+  {
+   "fieldname": "request_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Request Details"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "notes_section",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "addresses_tab",
+   "fieldtype": "Tab Break",
+   "label": "Addresses"
+  },
+  {
+   "fieldname": "address_info_section",
+   "fieldtype": "Section Break",
+   "label": "Address Info"
+  },
+  {
+   "fieldname": "from_company",
+   "fieldtype": "Data",
+   "label": "From Company"
+  },
+  {
+   "fieldname": "column_break_ljpd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "to_company",
+   "fieldtype": "Data",
+   "label": "To Company"
+  },
+  {
+   "fieldname": "from_contact",
+   "fieldtype": "Data",
+   "label": "From Contact"
+  },
+  {
+   "fieldname": "from_code",
+   "fieldtype": "Data",
+   "label": "Code Gate/Fence/Key Location"
+  },
+  {
+   "fieldname": "from_start_time",
+   "fieldtype": "Time",
+   "label": "Start Working Hour"
+  },
+  {
+   "fieldname": "from_end_time",
+   "fieldtype": "Time",
+   "label": "End Working Hour"
+  },
+  {
+   "fieldname": "to_contact",
+   "fieldtype": "Data",
+   "label": "To Contact"
+  },
+  {
+   "fieldname": "from_address",
+   "fieldtype": "Data",
+   "label": "From Address"
+  },
+  {
+   "fieldname": "to_address",
+   "fieldtype": "Data",
+   "label": "To Address"
+  },
+  {
+   "fieldname": "to_code",
+   "fieldtype": "Data",
+   "label": "Code Gate/Fence/Key Location Copy"
+  },
+  {
+   "fieldname": "to_start_time",
+   "fieldtype": "Time",
+   "label": "Start Working Hour"
+  },
+  {
+   "fieldname": "to_end_time",
+   "fieldtype": "Time",
+   "label": "End Working Hour"
+  },
+  {
+   "fieldname": "vehicle_tab",
+   "fieldtype": "Tab Break",
+   "label": "Vehicle"
+  },
+  {
+   "fieldname": "vin",
+   "fieldtype": "Link",
+   "label": "VIN",
+   "options": "Client Vehicle"
+  },
+  {
+   "fieldname": "vehicle_number",
+   "fieldtype": "Data",
+   "label": "Vehicle Number"
+  },
+  {
+   "fieldname": "column_break_cssp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "make",
+   "fieldtype": "Data",
+   "label": "Model / Make"
+  },
+  {
+   "default": "0",
+   "fieldname": "cables",
+   "fieldtype": "Check",
+   "label": "Hitch / Cables"
+  },
+  {
+   "fieldname": "plate",
+   "fieldtype": "Data",
+   "label": "Plate"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Link",
+   "label": "Type",
+   "options": "Vehicle Type"
+  },
+  {
+   "fieldname": "fuel_type",
+   "fieldtype": "Link",
+   "label": "Fuel Type",
+   "options": "Vehicle Fuel Type"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-30 11:35:57.937594",
+ "modified": "2025-12-31 11:38:00.513475",
  "modified_by": "Administrator",
  "module": "Tft Webportal",
  "name": "Transportation Request",
