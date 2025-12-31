@@ -61,7 +61,7 @@
 					<div>{{ _("Date") }}</div>
 					<div>{{ _("Pickup") }}</div>
 					<div>{{ _("Delivery") }}</div>
-					<div>{{ _("Vehicles") }}</div>
+					<div>{{ _("PO Number") }}</div>
 					<div>{{ _("Status") }}</div>
 					<div></div>
 				</div>
@@ -73,7 +73,7 @@
 							<div>{{a.date}}</div>
 							<div>{{a.from_address}}</div>
 							<div>{{a.to_address}}</div>
-							<div>{{ a.vehicles }}</div>
+							<div>{{ a.p_o_number }}</div>
 							<div><span class="status-pill status-{{ a.status | lower }}">{{ a.status }}</span></div>
 							<div><a class="row-link btn" href="/transportation_request?request={{a.name}}&view=1">{{ _("View") }}</a></div>
 						</div>
